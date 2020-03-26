@@ -1,0 +1,8 @@
+Debian buster on raspberry pi zero (and pi3)
+Setup the serial port (enabling the serial port)
+add to /boot/config.txt
+dtoverlay=pi3-miniuart-bt
+
+# Packages
+pip3 install cobs
+sudo apt-get install python3-pyqt5

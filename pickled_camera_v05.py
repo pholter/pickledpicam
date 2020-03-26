@@ -20,9 +20,9 @@ baudrate = 1228800
 ser = serial.Serial(port='/dev/ttyAMA0',baudrate = baudrate)
 #ser = serial.Serial(port='/dev/ttyUSB0',baudrate = baudrate)
 
-resolution = (640, 480)
+#resolution = (640, 480)
 #resolution = (1024, 780)
-#resolution = (320, 200)
+resolution = (320, 200)
 #resolution = (400,300)
 quality = 10
 
