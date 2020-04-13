@@ -87,7 +87,7 @@ def read_pic():
 
 
 print('Looking for files in directory')
-DPATH = 'data/'
+DPATH = '/home/pi/pickledpicam/data/'
 fcounter = 0
 for f in glob.glob(DPATH + '*.jpg'):
     #print(f)
