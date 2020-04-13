@@ -7,6 +7,6 @@ dtoverlay=pi3-miniuart-bt
 sudo pip3 install cobs
 sudo apt-get install python3-pyqt5
 
-# Install the rc_scrip
+# Install the rc_script
 sudo cp pickledpicam_rc /etc/init.d
 sudo chmod 755 /etc/init.d/pickledpicam_rc
