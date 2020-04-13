@@ -24,7 +24,7 @@ int close_keller_LD(int i2chandle)
 }
 
 
-int read_keller_LD(int i2chandle, struct keller_LD *sen)
+int read_keller_LD(int i2chandle, char *retrx, double *retp, double *retT, double *rettime)
 {
   struct timespec ts_10ms;
   struct timeval sampletime;
@@ -59,14 +59,14 @@ int read_keller_LD(int i2chandle, struct keller_LD *sen)
   //stime = sampletime.tv_sec + sampletime.tv_usec / 1000000;
   stime = (double) sampletime.tv_sec + ((double) sampletime.tv_usec) / 1000000;
   //printf("Time: %ld %ld\n",sampletime.tv_sec,sampletime.tv_usec);   
-  //printf("Time: %f Bar raw: %d Bar: %f\n",stime,bar_raw,bar);   
+  printf("Time: %f Bar raw: %d Bar: %f\n",stime,bar_raw,bar);   
   T_raw = rxbuffer[4] + rxbuffer[3] * 256;
   T = (T_raw/16 - 24) * 0.05 - 50;
-  sen->T = T;
-  sen->p = bar;
-  sen->time = stime;
+  *retT = T;
+  *retp = bar;
+  *rettime = stime;
   for (i=0;i<5;i++)
-    sen->rx[i] = rxbuffer[i];
+    retrx[i] = rxbuffer[i];
   //printf("T raw: %d T: %f\n",T_raw,T);
   return (int) status;
 }

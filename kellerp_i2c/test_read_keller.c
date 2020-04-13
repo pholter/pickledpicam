@@ -12,7 +12,8 @@ int main(void)
 {
   int i;
   char devpath[11];
-  struct keller_LD sen;
+  double p,T,stime;
+  char rx[5];
   struct timespec ts;
   ts.tv_sec = 0;
   ts.tv_nsec = 500 * 1000000;
@@ -25,9 +26,10 @@ int main(void)
   {
    printf("Hallo %d\n",i);
    nanosleep(&ts,&ts);
-   read_keller_LD(i2chandle,&sen);
-   printf("Time: %f Press: %f Temp: %f\n",sen.time,sen.p,sen.T);
-   printf("%x %x %x %x %x\n",sen.rx[0],sen.rx[1],sen.rx[2],sen.rx[3],sen.rx[4]);
+   read_keller_LD(i2chandle,rx,&p,&T,&stime);
+   //extern int read_keller_LD(int i2chandle, char *retrx, double retp, double retT, double rettime);
+   printf("Time: %f Press: %f Temp: %f\n",stime,p,T);
+   printf("%x %x %x %x %x\n",rx[0],rx[1],rx[2],rx[3],rx[4]);
   }
   close_keller_LD(i2chandle);
 
