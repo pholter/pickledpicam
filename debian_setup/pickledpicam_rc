@@ -1,0 +1,34 @@
+ #! /bin/sh
+# /etc/init.d/pickledpicam
+
+### BEGIN INIT INFO
+# Provides:          pickledpicam
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Simple script to start a program at boot
+# Description:       A simple script to start the pickledpicam
+### END INIT INFO
+
+# If you want a command to always run, put it here
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting pickledpicam"
+    # run application you want to start
+    python3 /home/pi/pickledpicam/pickled_camera_v06.py
+    ;;
+  stop)
+    echo "Stopping pickledpicam"
+    # kill application you want to stop
+    killall python3 /home/pi/pickledpicam/pickled_camera_v06.py
+    ;;
+  *)
+    echo "Usage: /etc/init.d/pickledpicam {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0 
