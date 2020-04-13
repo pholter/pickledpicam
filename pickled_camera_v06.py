@@ -90,6 +90,7 @@ def read_pic():
 print('Looking for files in directory')
 DPATH = '/home/pi/pickledpicam/data/'
 fcounter = 0
+nsave = 5 # Save every n files
 for f in glob.glob(DPATH + '*.jpg'):
     #print(f)
     try:
@@ -130,15 +131,21 @@ while 1:
         dt = ts - tb
 
         # Saving the file
-        fname = '{:08d}'.format(fcounter) + '_' + data_dict['tstr_file'] + '.jpg'
-        fname_full = DPATH + fname
-        print('Saving to',fname)
-        tbs = time.time()        
-        f = open(fname_full,'wb')
-        f.write(data)
-        f.close()
-        tss = time.time()
-        dtsave = tss - tbs        
+
+        if(fcounter%nsave == 0):
+            fname = '{:08d}'.format(fcounter) + '_' + data_dict['tstr_file'] + '.jpg'
+            fname_full = DPATH + fname            
+            print('Saving to',fname)
+            tbs = time.time()        
+            f = open(fname_full,'wb')
+            f.write(data)
+            f.close()
+            tss = time.time()
+            dtsave = tss - tbs
+        else:
+            fname = ''
+            dtsave = 0
+            
         fcounter += 1
         # Write the log file
         pR = data_dict['p'].value
