@@ -24,7 +24,7 @@ case "$1" in
   stop)
     echo "Stopping pickledpicam"
     # kill application you want to stop
-    killall python3 /home/pi/pickledpicam/pickled_camera_v06.py
+    pkill -f "python3 /home/pi/pickledpicam/pickled_camera_v06.py"
     ;;
   *)
     echo "Usage: /etc/init.d/pickledpicam {start|stop}"
