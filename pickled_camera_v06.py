@@ -83,6 +83,7 @@ def read_pic():
         data_ret['p'] = p
         data_ret['T'] = T
         data_ret['tstr_file'] = tstr_file
+        data_ret['data_str'] = data_str
         picqueue.append(data_ret)
 
 
@@ -94,9 +95,9 @@ for f in glob.glob(DPATH + '*.jpg'):
     try:
         fcounter_tmp = int(f.split('/')[-1].split('_')[0])
     except:
-        fcounter_tmp = 0
-    if(fcounter_tmp > fcounter):
-        fcounter = fcounter_tmp
+        fcounter_tmp = -1
+    if(fcounter_tmp >= fcounter):
+        fcounter = fcounter_tmp +1
 
 print('Found ', fcounter, ' files in directory',DPATH)
 print('Opening pressure sensor')
@@ -105,7 +106,9 @@ camthread = threading.Thread(target=read_pic)
 print('Starting camera thread')
 camthread.start()
 
-
+fname_log = '{:08d}'.format(fcounter) + '.log'
+fname_log_full = DPATH + fname_log
+flog = open(fname_log_full,'w')
 print('Starting sending loop')
 while 1:
     #image = Image.open(stream)
@@ -137,7 +140,16 @@ while 1:
         tss = time.time()
         dtsave = tss - tbs        
         fcounter += 1
-        print('Sent data in ', dt, 'seconds','Captured in ', dtcap, 'seconds','Saved in ',dtsave)        
+        # Write the log file
+        pR = data_dict['p'].value
+        TR = data_dict['T'].value
+
+        data_strR = ',p,{:3.2f}'.format(pR) + ',T,{:3.1f}'.format(TR)        
+        logstr = data_dict['tstr_file'] + data_strR + ',' + fname + '\n'
+        flog.write(logstr)
+        flog.flush()
+        print('Sent data in ', dt, 'seconds','Captured in ', dtcap, 'seconds','Saved in ',dtsave)
+        
         time.sleep(.05)
         counter += 1
 
