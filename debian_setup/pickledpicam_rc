@@ -18,7 +18,8 @@ case "$1" in
   start)
     echo "Starting pickledpicam"
     # run application you want to start
-    python3 /home/pi/pickledpicam/pickled_camera_v06.py
+    LOGFILE=$(date +'%Y-%m-%d_%H%M%S')
+    python3 /home/pi/pickledpicam/pickled_camera_v06.py > /home/pi/pickledpicam/data/log/${LOGFILE}.log
     ;;
   stop)
     echo "Stopping pickledpicam"
