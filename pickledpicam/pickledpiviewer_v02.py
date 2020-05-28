@@ -45,7 +45,7 @@ def serial_init():
 
 class pickledpiviewerMainWindow(QtWidgets.QMainWindow):
     def __init__(self,logging_level=logging.INFO,record_folder = None):
-        [ser,serGPS] = serial_init()
+        [self.ser,self.serGPS] = serial_init()
         if record_folder == None:
             self.record_folder = os.getcwd()
 
@@ -87,14 +87,14 @@ class pickledpiviewerMainWindow(QtWidgets.QMainWindow):
         fileMenu.addAction(quitAction)
 
         # Create a timer for reading serial data
-        if ser is not None:
+        if self.ser is not None:
             self.dread = b''
             self.read_data_timer = QtCore.QTimer()
             self.read_data_timer.timeout.connect(self.read_data)
             self.read_data_timer.start(20)
             self.counter = 0
 
-        if serGPS is not None:
+        if self.serGPS is not None:
             self.gpsread = b''
             self.gps_read_data_timer = QtCore.QTimer()
             self.gps_read_data_timer.timeout.connect(self.read_GPS_data)
@@ -105,6 +105,7 @@ class pickledpiviewerMainWindow(QtWidgets.QMainWindow):
 
         self.create_filename()
         self.statusBar()
+        self.statusBar().showMessage('Welcome!')
 
     def record_clicked(self):
 
@@ -120,14 +121,14 @@ class pickledpiviewerMainWindow(QtWidgets.QMainWindow):
         """ Assembles the filename to save and displays it
         """
         tstr = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.filename = 'ppcam_' + tstr + '__' + self.GPS_string + '.jpg'
+        self.filename = 'pipicam_' + tstr + '__' + self.GPS_string + '.jpg'
         self.filename_full = self.record_folder + '/' + self.filename
         self.filelabel.setText(self.filename)
 
     def read_GPS_data(self):
-        n = serGPS.inWaiting()
+        n = self.serGPS.inWaiting()
         if(n > 0):
-            data = serGPS.read(n)
+            data = self.serGPS.read(n)
             #try:
             if True:
                 data = data.decode('utf-8')
@@ -150,21 +151,22 @@ class pickledpiviewerMainWindow(QtWidgets.QMainWindow):
     def read_data(self):
         self.counter += 1
         #print('Data!',self.counter,time.time())
-        n = ser.inWaiting()
+        n = self.ser.inWaiting()
         if(n > 0):
             print(self.counter)
-            self.dread += ser.read(n)
+            self.dread += self.ser.read(n)
             print('Zeros',self.dread.rfind(b'\x00'))
             ind_zero = self.dread.rfind(b'\x00')
             if(ind_zero > 0):
                 ind_zero0 = self.dread[:ind_zero].rfind(b'\x00')
                 #print()
                 if(ind_zero0 >= 0):
-                    print('Found frame',ind_zero0,ind_zero)
+                    print('Received frame',ind_zero0,ind_zero)
+                    self.statusBar().showMessage('Received frame')
                     cobs_data = self.dread[ind_zero0+1:ind_zero]
                     try:
                         data = cobs.decode(cobs_data)
-                        print('fsd',self.dread[ind_zero:])
+                        #print('fsd',self.dread[ind_zero:])
                         self.dread = self.dread[ind_zero:]
                         if(len(data) > 10):
                             # Check if we have a package
@@ -176,9 +178,9 @@ class pickledpiviewerMainWindow(QtWidgets.QMainWindow):
                             print('time',tu)
                             data = data[9:]
                             print('Opening image')
-                            stream = io.BytesIO()
-                            stream.write(data)
-                            stream.seek(0)
+                            #stream = io.BytesIO()
+                            #stream.write(data)
+                            #stream.seek(0)
                             #image = Image.open(stream)
                             #image.show()
                             print(type(data))
@@ -189,10 +191,11 @@ class pickledpiviewerMainWindow(QtWidgets.QMainWindow):
                             # Saving the Data
                             self.create_filename()
                             if(self.recording):
-                                f = open(self.filename_full,'w')
+                                f = open(self.filename_full,'wb')
                                 f.write(data)
                                 f.close()
-                                self.statusBar().showMessage('Written ' + self.filename_full)
+                                self.statusBar().showMessage('Wrote ' + self.filename_full)
+
 
                     except Exception as e:
                         print(e)

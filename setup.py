@@ -21,7 +21,7 @@ setup(name='pickledpicam',
       license='GPLv03',
       packages=['pickledpicam'],
       scripts = [],
-      entry_points={ 'console_scripts': ['ppcviewer=pickledpicam.pickledpiviewer_v02:main']},
+      entry_points={ 'console_scripts': ['pipicamviewer=pickledpicam.pickledpiviewer_v02:main']},
       package_data = {'':['VERSION']},
       install_requires=[ 'cobs'],
       classifiers=[
