@@ -63,7 +63,7 @@ def read_pic():
         read_keller_LD(sensor,rx,ctypes.byref(p),ctypes.byref(T),ctypes.byref(stime))
         tstr = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-5]
         tstr_file = datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S.%f')[:-5]        
-        data_str = tstr + ' p: {:3.2f}'.format(p.value) + ' T: {:3.1f}'.format(T.value)
+        data_str = tstr + ' p: {:3.3f}'.format(p.value) + ' T: {:3.1f}'.format(T.value)
         #print(float(p),p,T)
         print(data_str)
         camera.exif_tags['EXIF.UserComment'] = data_str.encode()
